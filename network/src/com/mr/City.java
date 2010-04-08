@@ -3,7 +3,7 @@ package com.mr;
 public class City {
 	private int x;
 	private int y;
-
+	
 	public City(int x, int y) {
 		this.x = x;
 		this.y = y;

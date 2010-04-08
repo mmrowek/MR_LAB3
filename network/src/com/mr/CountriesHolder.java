@@ -2,12 +2,13 @@ package com.mr;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CountriesHolder {
 	private BufferedImage img;
-	private Set<Integer> countries = new HashSet<Integer>();
+	private Map<Integer, ArrayList<City>> countries = new HashMap<Integer, ArrayList<City>>();
 
 	public CountriesHolder(BufferedImage img) {
 		this.img = img;
@@ -16,15 +17,11 @@ public class CountriesHolder {
 				int col = img.getRGB(x, y);
 
 				if (col != Color.BLACK.getRGB()) {
-					countries.add(col);
+					countries.put(col, new ArrayList<City>());
 				}
 			}
 		}
 		System.out.println("countries: " + countries.size());
-		for (Integer i : countries) {
-			System.out.println(i);
-		}
-
 	}
 
 	public BufferedImage getImage() {
@@ -33,5 +30,20 @@ public class CountriesHolder {
 
 	public boolean inTheSameCountry(City c1, City c2) {
 		return img.getRGB(c1.getX(), c1.getY()) == img.getRGB(c2.getX(), c2.getY());
+	}
+
+	public boolean addCity(City city) {
+		int col = img.getRGB(city.getX(), city.getY());
+		if (col != Color.BLACK.getRGB()) {
+			countries.get(col).add(city);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public ArrayList<City> getCitiesInTheSameCountry(City city) {
+		int col = img.getRGB(city.getX(), city.getY());
+		return countries.get(col);
 	}
 }

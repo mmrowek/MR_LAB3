@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -23,7 +25,8 @@ public class Main extends JPanel {
 	private Simulation simulation;
 
 	private BufferedImage img; // image of world where borders are black and
-								// each country has different color
+
+	// each country has different color
 
 	public Main() {
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -48,6 +51,41 @@ public class Main extends JPanel {
 		});
 		add(sim1Button);
 
+		JButton artButton = new JButton("art");
+		artButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent a) {
+				simulation = new ArticleSimulation(0.5, mapHolder, countriesHolder, img.getWidth(),
+						img.getHeight(), new DistanceFunction() {
+
+							@Override
+							public double invoke(double value) {
+								return value;
+							}
+						});
+			}
+		});
+		add(artButton);
+
+		JButton degreesButton = new JButton("print degrees");
+		degreesButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent a) {
+				System.out.println("Degrees");
+				TreeMap<Integer, Integer> map = new TreeMap<Integer, Integer>();
+				for (City city : mapHolder.getCities()) {
+					int deg = mapHolder.getDegree(city);
+					if (map.get(deg) != null) {
+						map.put(deg, map.get(deg) + 1);
+					} else {
+						map.put(deg, 1);
+					}
+				}
+				for (Integer i : map.descendingKeySet()) {
+					System.out.println(i + " " + map.get(i));
+				}
+			}
+		});
+		add(degreesButton);
+
 		JButton stepButton = new JButton("Step");
 		stepButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent a) {
@@ -58,7 +96,8 @@ public class Main extends JPanel {
 
 				simulation.step();
 				view.repaint();
-				System.out.println("---------------------------\n" + mapHolder);
+				// System.out.println("---------------------------\n" +
+				// mapHolder);
 			}
 		});
 		add(stepButton);
